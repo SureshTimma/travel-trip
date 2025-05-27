@@ -10,13 +10,15 @@ interface Step3Props {
 export default function Step3({ next, prev }: Step3Props) {
   const { formData, updateForm } = useFormData();
   const [passengers, setPassengers] = useState<number>(formData.passengers || 1);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value >= 1) {
-      setPassengers(value);
-    } else if (e.target.value === '') {
-      setPassengers(1); // Default to 1 if empty
+    // Allow empty input for editing purposes
+    if (e.target.value === '') {
+      setPassengers(0); // Temporarily allow 0 for editing
+    } else {
+      const value = parseInt(e.target.value, 10);
+      if (!isNaN(value)) {
+        setPassengers(value);
+      }
     }
   };
 
@@ -41,12 +43,11 @@ export default function Step3({ next, prev }: Step3Props) {
       
       <div className="space-y-5">
         <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-          <label className="block mb-2 font-medium text-blue-50">Number of Passengers</label>
-          <input
+          <label className="block mb-2 font-medium text-blue-50">Number of Passengers</label>          <input
             type="number"
             min={1}
             name="passengers"
-            value={passengers}
+            value={passengers === 0 ? '' : passengers}
             onChange={handleChange}
             placeholder="Enter number of passengers"
             className="w-full px-4 py-3 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-black bg-white/90"
