@@ -1,5 +1,5 @@
-import { MongoConnect } from "../DB/MongoConnect";
-import { bookingDetailsModel } from "../DB/MongoDB";
+import { MongoConnect } from "../../DB/MongoConnect";
+import { bookingDetailsModel } from "../../DB/MongoDB";
 import Link from "next/link";
 
 // Interface for booking type
