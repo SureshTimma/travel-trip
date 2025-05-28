@@ -1,25 +1,30 @@
 // app/travel-form/steps/Step1.tsx
 'use client';
-import { useFormData, FormData } from '../form-context';
+import { useFormData } from '../form-context';
 import { useState } from 'react';
 
+// Step1Props defines the props for the Step1 component
 interface Step1Props {
   next: () => void; 
   prev: () => void;
 }
 
+// Step1 component for entering user travel details
 export default function Step1({ next }: Step1Props) {
   const { formData, updateForm } = useFormData();
+  // Local state for form fields
   const [localData, setLocalData] = useState({
     name: formData.name || '',
     startLocation: formData.startLocation || '',
     endLocation: formData.endLocation || '',
   });
 
+  // Handle input changes and update local state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalData({ ...localData, [e.target.name]: e.target.value });
   };
 
+  // Handle next button click: update global form and go to next step
   const handleNext = () => {
     updateForm(localData);
     next();
