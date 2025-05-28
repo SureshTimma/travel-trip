@@ -9,7 +9,7 @@ const Bookings = async () => {
                 {bookings.map((booking) => (
                     <div key={booking._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
                         <div className="bg-[#2e4369] text-white p-4">
-                            <h2 className="text-xl font-semibold">{booking.name}'s Trip</h2>
+                            <h2 className="text-xl font-semibold">{booking.name}&#39;s Trip</h2>
                         </div>
                         <div className="p-5">
                             <div className="grid grid-cols-2 gap-4 mb-4">

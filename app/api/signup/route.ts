@@ -1,6 +1,5 @@
 import { MongoConnect } from "@/app/DB/MongoConnect"
 import { userModel } from "@/app/DB/MongoDB";
-import { connect } from "http2"
 import { NextRequest, NextResponse } from "next/server"
 
 export const POST = async (req: NextRequest)=>{
@@ -17,7 +16,7 @@ export const POST = async (req: NextRequest)=>{
     }
     
     // Create new user
-    const user = await userModel.create({
+    await userModel.create({
         email: body.email,
         password: body.password
     });    // Return success response with a message but don't include userId

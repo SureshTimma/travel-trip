@@ -9,8 +9,8 @@ const AdminLogin = () => {
     const router = useRouter();
   
     type UserData = {
-        email: String,
-        password: String
+        email: string,
+        password: string
     }
     
     const [userData, setUserData] = useState<UserData>({
@@ -18,7 +18,7 @@ const AdminLogin = () => {
         password: ""
     });
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUserData((prevData) => ({
             ...prevData,
@@ -26,7 +26,7 @@ const AdminLogin = () => {
         }));
     };
     
-    const onFormSubmission = async (e: any) => {
+    const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await axios.post("/api/admin/login", userData);
@@ -37,7 +37,7 @@ const AdminLogin = () => {
             
             // Redirect to travel form after successful sign-in
             router.push('/admin/bookings');
-        } catch (error) {
+        } catch (error: any) {
             console.error("Sign in failed:", error);
             alert("Sign in failed. Please check your credentials.");
         }

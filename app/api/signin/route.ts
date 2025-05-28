@@ -65,9 +65,15 @@ export const POST = async (req: NextRequest)=>{
         });
         
         return response;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { error: error.message },
+                { status: 500 }
+            );
+        }
         return NextResponse.json(
-            { error: error.message },
+            { error: "An unknown error occurred" },
             { status: 500 }
         );
     }

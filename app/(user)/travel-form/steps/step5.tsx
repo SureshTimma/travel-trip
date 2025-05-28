@@ -1,6 +1,5 @@
 // app/travel-form/steps/Step5.tsx
 'use client';
-import { bookingDetailsModel } from '@/app/DB/MongoDB';
 import { useFormData } from '../form-context';
 import { useState } from 'react';
 import axios from 'axios';

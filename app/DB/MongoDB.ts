@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 const schema = mongoose.Schema;
 const model = mongoose.model;
-const objectId = schema.ObjectId;
 
 const userSchema = new schema({
     email: String,
