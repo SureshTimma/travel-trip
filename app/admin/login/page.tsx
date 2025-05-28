@@ -37,9 +37,14 @@ const AdminLogin = () => {
             
             // Redirect to travel form after successful sign-in
             router.push('/admin/bookings');
-        } catch (error: any) {
-            console.error("Sign in failed:", error);
-            alert("Sign in failed. Please check your credentials.");
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error("Sign in failed:", error.response?.data || error.message);
+                alert("Sign in failed. Please check your credentials.");
+            } else {
+                console.error("Sign in failed:", error);
+                alert("Sign in failed. Please check your credentials.");
+            }
         }
     };
 
