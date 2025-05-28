@@ -1,6 +1,7 @@
 import { MongoConnect } from "../../DB/MongoConnect";
 import { bookingDetailsModel } from "../../DB/MongoDB";
 import Link from "next/link";
+import Cookies from "js-cookie"; 
 
 interface Booking {
   _id: string;
@@ -11,9 +12,11 @@ interface Booking {
   endDate: string;
 }
 
+const userId = Cookies.get("userId"); 
+
 const MyTrips = async () => {
   await MongoConnect();
-  const bookings: Booking[] = await bookingDetailsModel.find({ userId: "683556fd6b39a6908271df9c" }).exec();
+  const bookings: Booking[] = await bookingDetailsModel.find({ userId}).exec();
 
   // Format date to display in a nice format
   const formatDate = (dateString: string | Date) => {
