@@ -131,21 +131,22 @@ export default function TravelFormPage() {
     { title: 'Travel Assistance' },
     { title: 'Confirmation' },
   ];
-
   // Render submitted confirmation
   if (submitted) {
     return (
-      <div className="bg-gradient-to-r from-[#2e4369] to-[#3c527d] text-white p-8 rounded-lg shadow-lg w-full max-w-md text-center ">
-        <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-[#2e4369]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#F1F5F9] to-[#E2E8F0] p-4">
+        <div className="bg-gradient-to-r from-[#2e4369] to-[#3c527d] text-white p-8 rounded-lg shadow-lg w-full max-w-md text-center">
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-[#2e4369]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
           </div>
+          <h2 className="text-2xl font-bold mb-4">Thank You!</h2>
+          <p className="mb-6">Your travel request has been submitted successfully.</p>
+          <p className="text-sm text-blue-100">You will receive a confirmation email shortly.</p>
         </div>
-        <h2 className="text-2xl font-bold mb-4">Thank You!</h2>
-        <p className="mb-6">Your travel request has been submitted successfully.</p>
-        <p className="text-sm text-blue-100">You will receive a confirmation email shortly.</p>
       </div>
     );
   }
