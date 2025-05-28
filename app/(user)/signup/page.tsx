@@ -8,15 +8,16 @@ import { useState } from "react";
 const SignUp = ()=>{
     const router = useRouter();
     type UserData = {
-        email: String,
-        password: String
+        email: string,
+        password: string
     }
     const [userData, setUserData] = useState<UserData>({
         email: "",
         password: ""
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");    const handleChange =(e:any)=>{
+    const [error, setError] = useState("");    
+    const handleChange =(e:React.ChangeEvent<HTMLInputElement>)=>{
         const {name,value}=e.target;
         setUserData((prevData)=>(
             {
@@ -25,7 +26,7 @@ const SignUp = ()=>{
             }
         ));
     };
-      const onFormSubmission = async (e:any)=>{
+      const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         setLoading(true);
         

@@ -9,8 +9,8 @@ const SignIn = () => {
     const router = useRouter();
   
     type UserData = {
-        email: String,
-        password: String
+        email: string,
+        password: string
     }
     
     const [userData, setUserData] = useState<UserData>({
@@ -18,7 +18,7 @@ const SignIn = () => {
         password: ""
     });
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUserData((prevData) => ({
             ...prevData,
@@ -26,7 +26,7 @@ const SignIn = () => {
         }));
     };
     
-    const onFormSubmission = async (e: any) => {
+    const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await axios.post("/api/signin", userData);
