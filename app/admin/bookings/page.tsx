@@ -40,9 +40,7 @@ const Bookings = async () => {
                                         {booking.passengers} {booking.passengers === 1 ? 'Passenger' : 'Passengers'}
                                     </span>
                                 </div>
-                                <div>
-                                    {booking.travelAssistance ? (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#2e4369] bg-opacity-20 text-[#2e4369]">
+                                <div>                                    {booking.travelAssistance ? (                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#2e4369] text-white">
                                             Assistance Requested
                                         </span>
                                     ) : (

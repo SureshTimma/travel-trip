@@ -3,7 +3,7 @@ import "./globals.css";
 import Navbar from "./Components/navbar/page";
 
 export const metadata: Metadata = {
-  title: "paytm clone",
+  title: "Travel Trip",
   description: "next js + typescript",
 };
 
