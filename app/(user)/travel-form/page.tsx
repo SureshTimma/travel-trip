@@ -79,11 +79,6 @@ export default function TravelFormPage() {
 
   // Navigation functions
   const goToNextStep = () => {
-    // Validate current step before proceeding
-    if (currentStep === 2 && formData.passengers < 1) {
-      alert('Please enter a valid number of passengers (at least 1)');
-      return;
-    }
     setCurrentStep(prev => prev + 1);
   };
 
@@ -127,7 +122,7 @@ export default function TravelFormPage() {
   const steps = [
     { title: 'Your Details' },
     { title: 'Travel Dates' },
-    { title: 'Guests' },
+    { title: 'Passengers' },
     { title: 'Travel Assistance' },
     { title: 'Confirmation' },
   ];
