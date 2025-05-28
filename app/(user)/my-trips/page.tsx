@@ -2,18 +2,18 @@ import { MongoConnect } from "../../DB/MongoConnect";
 import { bookingDetailsModel } from "../../DB/MongoDB";
 import Link from "next/link";
 
-// Interface for booking type
 interface Booking {
   _id: string;
   name: string;
   startLocation: string;
   endLocation: string;
-  startDate: Date;
+  startDate: string;
+  endDate: string;
 }
 
 const MyTrips = async () => {
   await MongoConnect();
-  const bookings = await bookingDetailsModel.find({ userId: "683556fd6b39a6908271df9c" }).exec();
+  const bookings: Booking[] = await bookingDetailsModel.find({ userId: "683556fd6b39a6908271df9c" }).exec();
 
   // Format date to display in a nice format
   const formatDate = (dateString: string | Date) => {
