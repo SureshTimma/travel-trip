@@ -4,8 +4,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 
-const Navbar = () => {
-    const { data: session, status } = useSession();
+const Navbar = () => {    const { status } = useSession();
     const isLoggedIn = status === 'authenticated' || !!Cookies.get("userId");
     
     const handleSignOut = async () => {

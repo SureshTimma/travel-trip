@@ -18,8 +18,7 @@ type FormData = {
 };
 
 export default function TravelFormPage() {
-  const router = useRouter();
-  const { data: session, status } = useSession({
+  const router = useRouter();  const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
       // Redirect to sign in if not authenticated
