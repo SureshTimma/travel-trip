@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // Define form data type
 type FormData = {
@@ -16,9 +18,18 @@ type FormData = {
 };
 
 export default function TravelFormPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      // Redirect to sign in if not authenticated
+      router.push('/signin');
+    },
+  });
+  
   // Single state to handle all form data
   const [formData, setFormData] = useState<FormData>({
-    userId: "",
+    userId: session?.user?.id || "",
     name: "",
     startLocation: "",
     endLocation: "",
@@ -31,24 +42,30 @@ export default function TravelFormPage() {
   // Handle current step
   const [currentStep, setCurrentStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  
-  // Get user ID from cookie on component mount
+    // Get user ID from session or fall back to cookie on component mount
   useEffect(() => {
-    const userIdFromCookie = Cookies.get("userId") || "";
-    console.log("User ID from cookie:", userIdFromCookie);
-    
-    const tokenFromCookie = Cookies.get("token") || "";
-    console.log("Token exists:", !!tokenFromCookie);
-    
-    if (userIdFromCookie) {
+    // If we have a session user ID, use it
+    if (session?.user?.id) {
       setFormData(prevData => ({
         ...prevData,
-        userId: userIdFromCookie
+        userId: session.user.id
       }));
-    } else {
-      console.warn("No userId found in cookies!");
+    } 
+    // Otherwise fall back to cookie (for backward compatibility)
+    else {
+      const userIdFromCookie = Cookies.get("userId") || "";
+      console.log("User ID from cookie:", userIdFromCookie);
+      
+      if (userIdFromCookie) {
+        setFormData(prevData => ({
+          ...prevData,
+          userId: userIdFromCookie
+        }));
+      } else {
+        console.warn("No userId found in session or cookies!");
+      }
     }
-  }, []);
+  }, [session]);
 
   // Generic input handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,13 +102,18 @@ export default function TravelFormPage() {
   const goToPrevStep = () => {
     setCurrentStep(prev => prev - 1);
   };
-
   // Form submission handler
   const handleSubmit = async () => {
     try {
-      // Check if userId exists before submitting
-      if (!formData.userId) {
-        console.warn("No userId found in form data, using fallback method");
+      // Always use session user ID if available
+      const formWithUserId = {
+        ...formData,
+        userId: session?.user?.id || formData.userId
+      };
+      
+      // As a fallback, check if userId exists before submitting
+      if (!formWithUserId.userId) {
+        console.warn("No userId found in form data or session, using fallback method");
         // Try to get it directly from cookies as a fallback
         const userId = document.cookie
           .split('; ')
@@ -99,17 +121,14 @@ export default function TravelFormPage() {
           ?.split('=')[1];
           
         if (userId) {
-          setFormData(prev => ({
-            ...prev,
-            userId
-          }));
+          formWithUserId.userId = userId;
           console.log("Retrieved userId from cookies:", userId);
         }
       }
       
       // Submit the form data
-      console.log('Submitting form data:', formData);
-      const response = await axios.post("/api/book-trip", formData);
+      console.log('Submitting form data:', formWithUserId);
+      const response = await axios.post("/api/book-trip", formWithUserId);
       console.log("API response:", response.data);
       setSubmitted(true);
     } catch (error) {
