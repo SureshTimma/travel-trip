@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface Booking {
   _id: string;
@@ -17,17 +19,31 @@ interface Booking {
 }
 
 const MyTrips = () => {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/signin');
+    },
+  });
+
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const userId = Cookies.get('userId');
+        // First try to get userId from NextAuth session
+        let userId = session?.user?.id;
+        
+        // If not available, fall back to cookies (for backward compatibility)
         if (!userId) {
-          console.warn('No userId found in cookies');
-          setLoading(false);
-          return;
+          userId = Cookies.get('userId');
+          if (!userId) {
+            console.warn('No userId found in session or cookies');
+            setLoading(false);
+            return;
+          }
         }
         
         // Fetch bookings from an API endpoint
@@ -39,9 +55,11 @@ const MyTrips = () => {
         setLoading(false);
       }
     };
-    
-    fetchBookings();
-  }, []);
+      // Only fetch bookings if session is authenticated or loading
+    if (status === 'authenticated' || status === 'loading') {
+      fetchBookings();
+    }
+  }, [session, status]);
 
   // Format date to display in a nice format
   const formatDate = (dateString: string | Date) => {
