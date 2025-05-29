@@ -1,17 +1,19 @@
 'use client';
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 
 const Navbar = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);    useEffect(() => {
-        // Check for userId to determine if user is logged in
-        // We use userId instead of token because token is HttpOnly
-        const userId = Cookies.get("userId");
-        console.log("Navbar - userId from cookie:", userId);
-        setIsLoggedIn(!!userId);
-    }, []);
+    const { data: session, status } = useSession();
+    const isLoggedIn = status === 'authenticated' || !!Cookies.get("userId");
+    
+    const handleSignOut = async () => {
+        await signOut({ callbackUrl: '/' });
+        // Also remove the existing cookies for backward compatibility
+        Cookies.remove("token");
+        Cookies.remove("userId");
+    };
 
     return (
         <nav className="bg-[#2e4369] text-white shadow-md">
@@ -43,12 +45,12 @@ const Navbar = () => {
                                     className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#3c527d] transition-colors"
                                 >
                                     My Trips
-                                </Link>                                <Link 
-                                    href="/signout" 
+                                </Link>                                <button 
+                                    onClick={handleSignOut} 
                                     className="ml-4 px-4 py-2 rounded-md text-sm font-medium bg-white text-[#2e4369] hover:bg-gray-100 transition-colors"
                                 >
                                     Sign Out
-                                </Link>
+                                </button>
                             </>
                         ) : (
                             <>
