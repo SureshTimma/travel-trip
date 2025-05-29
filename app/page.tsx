@@ -3,19 +3,11 @@
 import Image from "next/image";
 import heroImage from "../public/assets/hero-girl.png";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Check for userId to determine if user is logged in
-    // We use userId instead of token because token is HttpOnly
-    const userId = Cookies.get("userId");
-    console.log("Debug - userId from cookie:", userId);
-    setIsLoggedIn(!!userId);
-  }, []);
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   return (
     <div className="relative bg-[#F1F5F9] min-h-screen flex items-center px-32">
