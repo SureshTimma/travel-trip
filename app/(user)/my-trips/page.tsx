@@ -1,7 +1,9 @@
-import { MongoConnect } from "../../DB/MongoConnect";
-import { bookingDetailsModel } from "../../DB/MongoDB";
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from "next/link";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
+import axios from 'axios';
 
 interface Booking {
   _id: string;
@@ -10,13 +12,36 @@ interface Booking {
   endLocation: string;
   startDate: string;
   endDate: string;
+  passengers: number;
+  travelAssistance: boolean;
 }
 
-const userId = Cookies.get("userId"); 
-
-const MyTrips = async () => {
-  await MongoConnect();
-  const bookings: Booking[] = await bookingDetailsModel.find({ userId}).exec();
+const MyTrips = () => {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const userId = Cookies.get('userId');
+        if (!userId) {
+          console.warn('No userId found in cookies');
+          setLoading(false);
+          return;
+        }
+        
+        // Fetch bookings from an API endpoint
+        const response = await axios.get(`/api/bookings?userId=${userId}`);
+        setBookings(response.data || []);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchBookings();
+  }, []);
 
   // Format date to display in a nice format
   const formatDate = (dateString: string | Date) => {
@@ -36,7 +61,11 @@ const MyTrips = async () => {
           <p className="mt-2 text-lg text-gray-600">View all your upcoming and past travels</p>
         </div>
 
-        {bookings.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2e4369]"></div>
+          </div>
+        ) : bookings.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {bookings.map((booking: Booking) => (
               <div key={booking._id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -86,7 +115,19 @@ const MyTrips = async () => {
                     </div>
                   </div>
                   
-                 
+                  {/* Additional details */}
+                  <div className="mt-4 flex justify-between text-sm">
+                    <div>
+                      <p className="text-gray-500">Passengers</p>
+                      <p className="font-medium">{booking.passengers}</p>
+                    </div>
+                    {booking.travelAssistance && (
+                      <div>
+                        <p className="text-gray-500">Special Assistance</p>
+                        <p className="font-medium text-blue-600">Yes</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -106,6 +147,6 @@ const MyTrips = async () => {
       </div>
     </div>
   );
-}
+};
 
 export default MyTrips;

@@ -33,9 +33,7 @@ const SignIn = () => {
             console.log("Sign in successful:", response.data);
             
             // Check if cookies were set
-            console.log("Cookies after signin:", document.cookie);
-            
-            // Redirect to travel form after successful sign-in
+            console.log("Cookies after signin:", document.cookie);            // Redirect to travel form after successful sign-in
             router.push('/travel-form');
         } catch (error) {
             console.error("Sign in failed:", error);
