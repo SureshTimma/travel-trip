@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 const SignIn = () => {
     const router = useRouter();
@@ -25,19 +26,42 @@ const SignIn = () => {
             [name]: value
         }));
     };
+      const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
     
     const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError("");
+        
         try {
-            const response = await axios.post("/api/signin", userData);
-            console.log("Sign in successful:", response.data);
+            // First try NextAuth sign in
+            const result = await signIn("credentials", {
+                email: userData.email,
+                password: userData.password,
+                redirect: false,
+            });
             
-            // Check if cookies were set
-            console.log("Cookies after signin:", document.cookie);            // Redirect to travel form after successful sign-in
-            router.push('/travel-form');
+            if (result?.error) {
+                // If NextAuth fails, fall back to the original sign-in method for backward compatibility
+                try {
+                    const response = await axios.post("/api/signin", userData);
+                    console.log("Sign in successful with original method:", response.data);
+                    router.push('/travel-form');
+                } catch (axiosError) {
+                    console.error("Sign in failed:", axiosError);
+                    setError("Invalid email or password");
+                }
+            } else {
+                // NextAuth successful
+                router.push('/travel-form');
+                router.refresh();
+            }
         } catch (error) {
             console.error("Sign in failed:", error);
-            alert("Sign in failed. Please check your credentials.");
+            setError("An unexpected error occurred");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -53,6 +77,11 @@ const SignIn = () => {
                     <h1 className="text-4xl font-bold text-center text-[#2e4369]">Welcome Back</h1>
                     <p className="text-gray-500 mt-1">Sign in to access your account</p>
                 </div>
+                  {error && (
+                    <div className="mb-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700">
+                        <p>{error}</p>
+                    </div>
+                )}
                 
                 <div className="mb-5">
                     <label htmlFor="email" className="block mb-1 text-sm font-semibold text-gray-700">
@@ -70,6 +99,7 @@ const SignIn = () => {
                             id="email"
                             name="email"
                             onChange={handleChange}
+                            disabled={isLoading}
                             placeholder="Enter your email"
                             className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2e4369] focus:border-transparent transition-all duration-200"
                         />
