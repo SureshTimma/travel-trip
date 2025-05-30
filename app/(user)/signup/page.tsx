@@ -55,8 +55,7 @@ const SignUp = () => {
       <form
         onSubmit={onFormSubmission}
         className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl border-t-4 border-[#2e4369] transform transition-all duration-300 hover:translate-y-[-5px]"
-      >
-        <div className="text-center mb-8">
+      >        <div className="text-center mb-8">
           <div className="inline-flex justify-center items-center w-16 h-16 bg-[#2e4369] rounded-full mb-4 text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -72,6 +71,12 @@ const SignUp = () => {
           </h1>
           <p className="text-gray-500 mt-1">Sign up to get started</p>
         </div>
+        
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700">
+            <p>{error}</p>
+          </div>
+        )}
         <div className="mb-5">
           <label
             htmlFor="email"
@@ -90,12 +95,12 @@ const SignUp = () => {
                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
               </svg>
-            </div>
-            <input
+            </div>            <input
               type="email"
               id="email"
               name="email"
               onChange={handleChange}
+              disabled={isLoading}
               placeholder="Enter your email"
               className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2e4369] focus:border-transparent transition-all duration-200"
             />
@@ -123,22 +128,24 @@ const SignUp = () => {
                   clipRule="evenodd"
                 />
               </svg>
-            </div>
-            <input
+            </div>            <input
               type="password"
               id="password"
               name="password"
               onChange={handleChange}
+              disabled={isLoading}
               placeholder="Enter your password"
               className="w-full pl-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2e4369] focus:border-transparent transition-all duration-200"
             />
           </div>
-        </div>
-        <button
+        </div>        <button
           type="submit"
-          className="w-full bg-[#2e4369] text-white font-bold py-3 rounded-lg hover:bg-[#3c527d] transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+          disabled={isLoading}
+          className={`w-full bg-[#2e4369] text-white font-bold py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] ${
+            isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#3c527d]'
+          }`}
         >
-          Sign Up
+          {isLoading ? 'Creating Account...' : 'Sign Up'}
         </button>
 
         <p className="mt-6 text-center text-sm text-gray-700">
