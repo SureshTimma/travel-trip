@@ -22,25 +22,32 @@ const SignUp = () => {
       ...prevData,
       [name]: value,
     }));
-  };
+  };  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
   const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     try {
+      // Register the user with the NextAuth API
       const response = await axios.post("/api/signup", userData);
       console.log(response.data);
-      // Redirect to signin page after successful signup
+
+      // After successful registration, redirect to sign in page
       router.push("/signin");
     } catch (error: unknown) {
       console.error("Signup error:", error);
       if (axios.isAxiosError(error) && error.response) {
-        // Handle Axios error with response
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
+        // Set error message from response
+        setError(error.response.data?.error || "Registration failed");
       } else {
         // Handle generic or network error
-        console.error("Error message:", (error as Error).message);
+        setError((error as Error).message || "An unexpected error occurred");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   return (

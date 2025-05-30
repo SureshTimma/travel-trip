@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import Cookies from "js-cookie";
 
-const Navbar = () => {    const { status } = useSession();
-    const isLoggedIn = status === 'authenticated' || !!Cookies.get("userId");
+const Navbar = () => {
+    const { status } = useSession();
+    const isLoggedIn = status === 'authenticated';
     
     const handleSignOut = async () => {
         await signOut({ callbackUrl: '/' });
-        // Also remove the existing cookies for backward compatibility
-        Cookies.remove("token");
-        Cookies.remove("userId");
     };
 
     return (

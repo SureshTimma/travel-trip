@@ -2,18 +2,20 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import { signOut } from "next-auth/react";
 
 const SignOut = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Remove all auth cookies
-    Cookies.remove("token");
-    Cookies.remove("userId");
+    // Sign out using NextAuth
+    const performSignOut = async () => {
+      await signOut({ redirect: false });
+      // Redirect to home page after signing out
+      router.push("/");
+    };
     
-    // Redirect to home page after signing out
-    router.push("/");
+    performSignOut();
   }, [router]);
 
   return (

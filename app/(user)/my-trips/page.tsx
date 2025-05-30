@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from "next/link";
-import Cookies from "js-cookie";
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -29,21 +28,17 @@ const MyTrips = () => {
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  
-  useEffect(() => {
+    useEffect(() => {
     const fetchBookings = async () => {
       try {
-        // First try to get userId from NextAuth session
-        let userId = session?.user?.id;
+        // Get userId from NextAuth session
+        const userId = session?.user?.id;
         
-        // If not available, fall back to cookies (for backward compatibility)
+        // If no userId available, return early
         if (!userId) {
-          userId = Cookies.get('userId');
-          if (!userId) {
-            console.warn('No userId found in session or cookies');
-            setLoading(false);
-            return;
-          }
+          console.warn('No userId found in session');
+          setLoading(false);
+          return;
         }
         
         // Fetch bookings from an API endpoint

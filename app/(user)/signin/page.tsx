@@ -28,14 +28,13 @@ const SignIn = () => {
     };
       const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
-    
-    const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
+      const onFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         setError("");
         
         try {
-            // First try NextAuth sign in
+            // Using NextAuth sign in only
             const result = await signIn("credentials", {
                 email: userData.email,
                 password: userData.password,
@@ -43,15 +42,8 @@ const SignIn = () => {
             });
             
             if (result?.error) {
-                // If NextAuth fails, fall back to the original sign-in method for backward compatibility
-                try {
-                    const response = await axios.post("/api/signin", userData);
-                    console.log("Sign in successful with original method:", response.data);
-                    router.push('/travel-form');
-                } catch (axiosError) {
-                    console.error("Sign in failed:", axiosError);
-                    setError("Invalid email or password");
-                }
+                console.error("Sign in failed:", result.error);
+                setError("Invalid email or password");
             } else {
                 // NextAuth successful
                 router.push('/travel-form');
