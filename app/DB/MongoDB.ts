@@ -8,7 +8,7 @@ const userSchema = new schema({
 })
 
 const bookingDetailsSchema = new schema({
-    userId: String, // Changed from objectId to String to match what's stored in cookies
+    userId: String,
     name:String,
     startLocation:String,
     endLocation:String,
